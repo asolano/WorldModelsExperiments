@@ -13,7 +13,7 @@ do
   for i in `seq 1 $c2`;
     do
       echo worker $i
-      #python extract.py &
+      python extract.py &
       pids[${i}]=$!
       sleep 1.0
     done
@@ -28,7 +28,7 @@ echo last
 for i in `seq 1 $last`;
   do
     echo worker $i
-    #python extract.py &
+    python extract.py &
     pids[${i}]=$!
     sleep 1.0
   done
