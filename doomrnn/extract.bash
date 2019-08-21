@@ -5,14 +5,15 @@ export CUDA_VISIBLE_DEVICES=""
 c1=64
 c2=`cat /proc/cpuinfo | grep processor | wc -l`
 batches=$((c1 / c2))
+last=$((c1 % c2))
 for b in `seq 1 $batches`;
 do
   echo batch $b 
   # Launch one process per core
-  for i in `seq 1 4`;
+  for i in `seq 1 $c2`;
     do
       echo worker $i
-      python extract.py &
+      #python extract.py &
       pids[${i}]=$!
       sleep 1.0
     done
@@ -20,4 +21,18 @@ do
   for pid in ${pids[*]}; do
     wait $pid
   done
+done
+
+echo last
+# Launch one process per core
+for i in `seq 1 $last`;
+  do
+    echo worker $i
+    #python extract.py &
+    pids[${i}]=$!
+    sleep 1.0
+  done
+# Wait for all processes to finish
+for pid in ${pids[*]}; do
+  wait $pid
 done
